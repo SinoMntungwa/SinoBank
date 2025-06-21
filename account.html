@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>SinoBank | My Account</title>
+    <link rel="stylesheet" href="style.css"/>
+    <style>
+        /* Simple styles for transaction colors */
+        .deposit {
+            color: green;
+        }
+        .withdraw {
+            color: red;
+        }
+        .balance {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .transactions {
+            margin-top: 20px;
+        }
+        .actions input {
+            width: 150px;
+            padding: 5px;
+            margin-right: 5px;
+        }
+        .actions button {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Redirect to login if not logged in
+        if (sessionStorage.getItem("loggedIn") !== "true") {
+            alert("Please login first.");
+            window.location.href = "login.html";
+        }
+    </script>
+
+    <header>
+        <h1>My SinoBank Account</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="account.html">My Account</a>
+            <a href="login.html">Login</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Current Balance</h2>
+        <div class="balance" id="balance">R0.00</div>
+
+        <div class="actions">
+            <input type="number" id="amount" placeholder="Enter Amount" />
+            <button onclick="deposit()">Deposit</button>
+            <button onclick="withdraw()">Withdraw</button>
+        </div>
+
+        <div class="transactions">
+            <h3>Transaction History</h3>
+            <ul id="transaction-list"></ul>
+        </div>
+
+        <button onclick="logout()" style="margin-top: 20px;">Logout</button>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 SinoBank. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let balance = -50.00; // Starting balance (can be negative)
+        const overdraftLimit = -1000.00;
+
+        function updateDisplay() {
+            document.getElementById("balance").textContent = `R${balance.toFixed(2)}`;
+        }
+
+        function addTransaction(type, amount) {
+            const list = document.getElementById("transaction-list");
+            const item = document.createElement("li"); // Create new list item
+
+            if (type === "deposit") {
+                item.textContent = `Deposited R${amount.toFixed(2)}`;
+                item.classList.add("deposit");
+            } else if (type === "withdraw") {
+                item.textContent = `Withdrew R${amount.toFixed(2)}`;
+                item.classList.add("withdraw");
+            }
+
+            list.prepend(item); // Add to top of the list
+        }
+
+        function deposit() {
+            const amountInput = document.getElementById("amount");
+            const amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+            balance += amount;
+            updateDisplay();
+            addTransaction("deposit", amount);
+            amountInput.value = "";
+        }
+
+        function withdraw() {
+            const amountInput = document.getElementById("amount");
+            const amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+            if (balance - amount < overdraftLimit) {
+                alert(`Withdrawal denied. Overdraft limit of R${overdraftLimit.toFixed(2)} exceeded.`);
+                return;
+            }
+            balance -= amount;
+            updateDisplay();
+            addTransaction("withdraw", amount);
+            amountInput.value = "";
+        }
+
+        function logout() {
+            sessionStorage.removeItem("loggedIn");
+            window.location.href = "login.html";
+        }
+
+        // Initialize display on page load
+        updateDisplay();
+    </script>
+</body>
+</html>
