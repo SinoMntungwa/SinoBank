@@ -1,5 +1,5 @@
 # SinoBank. A Simple Banking Website
-WELCOME! to my very first banking site, SinoBank.
+WELCOME! to my very first banking site, SinoBank. 
 
 ## Features
 - Real-time balance display
@@ -7,6 +7,8 @@ WELCOME! to my very first banking site, SinoBank.
 - Transaction history log
 - Login page
 - Styled with soft pink and purple UI
+- Username: sino
+- Password: 1234
 
 ## Languages Used
 - HTML5
